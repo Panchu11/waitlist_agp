@@ -37,7 +37,7 @@ export default function ConfirmationSection({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h2 className="text-2xl font-bold text-white">You're In!</h2>
+        <h2 className="text-2xl font-bold text-white">You&apos;re In!</h2>
         <p className="text-gray-300 mt-1">Thanks for joining the waitlist</p>
       </div>
 

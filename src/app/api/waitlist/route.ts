@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase, WaitlistEntry } from '@/utils/supabase';
+import { supabase } from '@/utils/supabase';
 import crypto from 'crypto';
 
 // Function to generate a referral code from email
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     // Check if referral code exists if provided
     let referrerExists = false;
     if (referredBy) {
-      const { data: referrer, error: referrerError } = await supabase
+      const { data: referrer } = await supabase
         .from('waitlist_entries')
         .select('referral_code')
         .eq('referral_code', referredBy)
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if email already exists
-    const { data: existingEntry, error: checkError } = await supabase
+    const { data: existingEntry } = await supabase
       .from('waitlist_entries')
       .select('*')
       .eq('email', email)
@@ -52,12 +52,12 @@ export async function POST(request: NextRequest) {
 
     if (existingEntry) {
       // Email already exists, get rank and referral count
-      const { count: rankCount, error: rankError } = await supabase
+      const { count: rankCount } = await supabase
         .from('waitlist_entries')
         .select('*', { count: 'exact', head: true })
         .lte('created_at', existingEntry.created_at);
 
-      const { count: referralCount, error: refCountError } = await supabase
+      const { count: referralCount } = await supabase
         .from('waitlist_entries')
         .select('*', { count: 'exact', head: true })
         .eq('referred_by', existingEntry.referral_code);
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get rank (position in waitlist)
-    const { count: rankCount, error: rankError } = await supabase
+    const { count: rankCount } = await supabase
       .from('waitlist_entries')
       .select('*', { count: 'exact', head: true });
 
@@ -134,7 +134,7 @@ export async function GET(request: NextRequest) {
     const referralCode = generateReferralCode(email);
 
     // Get the waitlist entry
-    const { data: entry, error } = await supabase
+    const { data: entry } = await supabase
       .from('waitlist_entries')
       .select('*')
       .eq('email', email)
@@ -148,12 +148,12 @@ export async function GET(request: NextRequest) {
     }
 
     // Get rank
-    const { count: rankCount, error: rankError } = await supabase
+    const { count: rankCount } = await supabase
       .from('waitlist_entries')
       .select('*', { count: 'exact', head: true });
 
     // Get referral count
-    const { count: referralCount, error: refCountError } = await supabase
+    const { count: referralCount } = await supabase
       .from('waitlist_entries')
       .select('*', { count: 'exact', head: true })
       .eq('referred_by', entry.referral_code || referralCode);
