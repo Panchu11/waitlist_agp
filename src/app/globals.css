@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+  100% { transform: translateY(0px); }
+}
+
 :root {
   --background: #0a0a0a;
   --foreground: #ededed;
@@ -14,26 +26,83 @@
 
 body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  background: linear-gradient(-45deg, #0f172a, #1e1b4b, #312e81, #1e1b4b);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+.glass-input {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.glass-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.glass-input:focus {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  outline: none;
+  ring: 2px rgba(255, 255, 255, 0.3);
+}
+
+.gradient-text {
+  background: linear-gradient(to right, #60a5fa, #a78bfa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.btn-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-glow::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+  transform: rotate(45deg);
+  animation: glow 3s linear infinite;
+}
+
+@keyframes glow {
+  0% { transform: rotate(45deg) translateX(-100%); }
+  100% { transform: rotate(45deg) translateX(100%); }
 }
 
 @layer components {
   .btn {
-    @apply px-4 py-2 rounded-md transition-colors;
+    @apply relative px-6 py-3 rounded-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-transparent;
   }
 
   .btn-primary {
-    @apply bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700;
+    @apply glass-card bg-gradient-to-r from-blue-600/80 to-purple-600/80 text-white hover:from-blue-500/90 hover:to-purple-500/90 shadow-lg hover:shadow-xl;
   }
 
   .btn-secondary {
-    @apply bg-white/10 hover:bg-white/20 text-white;
+    @apply glass-card bg-white/10 text-white hover:bg-white/20;
   }
 
   .input {
-    @apply w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500;
+    @apply glass-input w-full px-4 py-3 rounded-lg transition-all duration-300;
   }
 
   .card {
-    @apply bg-white/10 backdrop-blur-md rounded-xl p-6 shadow-lg;
+    @apply glass-card rounded-2xl p-8 transition-all duration-300 hover:shadow-2xl;
   }
 }
